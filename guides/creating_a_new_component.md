@@ -205,7 +205,8 @@ class TestColorPicker(unittest.TestCase):
 Let's see the steps you need to follow to create the frontend of your new component and to map it to its python code:
 - Create a new UI-side Svelte component and figure out where to place it. The alternatives are: create a package for the new component in the [ui/packages folder](https://github.com/gradio-app/gradio/tree/main/ui/packages), if this is completely different from existing components or add the new component to an existing package, such as to the [form package](https://github.com/gradio-app/gradio/tree/main/ui/packages/form). The ColorPicker component for example, was included in the form package because it is similar to components that already exist.
 - Create a file with an appropriate name in the src folder of the package where you placed the Svelte component, note: the name must start with a capital letter. Initially add any text/html to this file so that the component renders something. The Svelte application code for the ColorPicker looks like this:
-```js
+
+```typescript
 <script lang="ts">
 	import { createEventDispatcher } from "svelte";
 	import { get_styles } from "@gradio/utils";
@@ -244,9 +245,11 @@ Let's see the steps you need to follow to create the frontend of your new compon
 	/>
 </label>
 ```
+
 - Export this file inside the index.ts file of the package where you placed the Svelte component by doing `export { default as FileName } from "./FileName.svelte"`. The ColorPicker file is exported in the [index.ts](https://github.com/gradio-app/gradio/blob/main/ui/packages/form/src/index.ts) file and the export is performed by doing: `export { default as ColorPicker } from "./ColorPicker.svelte";`.
 - Create the real component in [ui/packages/app/src/components](https://github.com/gradio-app/gradio/tree/main/ui/packages/app/src/components), copy the folder of another component, rename it and edit the code inside it, keeping the structure. Here you will have three files, the first file is for the Svelte application, and it will look like this:
-```js
+
+```typescript
 <svelte:options accessors={true} />
 
 <script lang="ts">
@@ -289,8 +292,10 @@ Let's see the steps you need to follow to create the frontend of your new compon
 	/>
 </Block>
 ```
+
 the second one contains the tests for the frontend, for example for the ColorPicker component:
-```ts
+
+```typescript
 import { test, describe, assert, afterEach } from "vitest";
 import { cleanup, render } from "@gradio/tootils";
 
@@ -343,13 +348,17 @@ describe("ColorPicker", () => {
 	});
 });
 ```
+
 the third one is the index.ts file:
-```ts
+
+```typescript
 export { default as Component } from "./ColorPicker.svelte";
 export const modes = ["static", "dynamic"];
 ```
+
 - Add the mapping for your component in the [directory.ts file](https://github.com/gradio-app/gradio/blob/main/ui/packages/app/src/components/directory.ts). To do this, copy and paste the mapping line of any component and edit its text. The key name must be the lowercase version of the actual component name in the Python library. So for example, for the ColorPicker component the mapping looks like this: 
-```ts
+
+```typescript
 export const component_map = {
 ...
 colorpicker: () => import("./ColorPicker"),
